@@ -1,0 +1,45 @@
+path:
+  dataset: dataset
+  model_path: outs/densenet/cutpix
+  save_path: outs/densenet/cutpix
+
+setup:
+  type: "none"
+  num_epoch: 400
+  image_size: (22, 64, 64)
+  gpus: "0,1,2,3"
+  cpus: 8
+  batch_size: 32
+  dim: 3
+  mix: cutpix
+  seed: 0
+
+train_args:
+  aug_n: 0
+  aug_m: None
+  size_cutout: 0
+  value_cutout: 0.0
+
+module:
+  model:
+    name: d121_3d
+    num_classes: 19
+
+  optim:
+    name: AdamW
+    lr: 0.001
+    weight_decay: 0.001
+
+  lr_scheduler:
+    name: CosineAnnealingLR
+    T_max: 400
+
+  loss: [CrossEntropyLoss]
+  loss_args:
+    CrossEntropyLoss:
+      reduction: mean
+  loss_weight: [1.]
+  val_metric: ConfusionMatrix
+  test_metric: ConfusionMatrix
+  metric_args:
+    nlabels: 19
